@@ -19,9 +19,9 @@ struct SetView: UIViewRepresentable {
         picker.dataSource = context.coordinator
         picker.delegate = context.coordinator
 
-        let hourIndex = second.getHour()
-        let minuteIndex = second.getMinute()
-        let secondIndex = second.getSecond()
+        let hourIndex = second.toHour()
+        let minuteIndex = second.toMinute()
+        let secondIndex = second.toSecond()
         picker.selectRow(hourIndex, inComponent: 0, animated: true)
         picker.selectRow(minuteIndex, inComponent: 2, animated: true)
         picker.selectRow(secondIndex, inComponent: 4, animated: true)
@@ -83,13 +83,16 @@ struct SetView: UIViewRepresentable {
         }
 
         func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            let h = TimeInterval(setView.second.toHour() * 3600)
+            let m = TimeInterval(setView.second.toMinute() * 60)
+            let s = TimeInterval(setView.second.toSecond())
             switch component {
             case 0:
-                setView.second = TimeInterval(row * 3600)
+                setView.second = TimeInterval(row * 3600) + m + s
             case 2:
-                setView.second = TimeInterval(row * 60)
+                setView.second = TimeInterval(row * 60) + h + s
             case 4:
-                setView.second = TimeInterval(row)
+                setView.second = TimeInterval(row) + h + m
             default: break
             }
         }
